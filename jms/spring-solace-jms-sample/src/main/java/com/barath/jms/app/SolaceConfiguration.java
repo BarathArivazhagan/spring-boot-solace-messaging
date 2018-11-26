@@ -2,6 +2,7 @@ package com.barath.jms.app;
 
 import com.solacesystems.jms.SolConnectionFactory;
 import com.solacesystems.jms.SolConnectionFactoryImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
@@ -12,14 +13,31 @@ import javax.jms.ConnectionFactory;
 @Configuration
 public class SolaceConfiguration {
 
+    @Value("${solace.host:localhost}")
+    private String solaceHost;
+
+
+    @Value("${solace.username:admin}")
+    private String solaceUserName;
+
+
+    @Value("${solace.password:admin}")
+    private String solacePassword;
+
+
+    @Value("${solace.host:default}")
+    private String solaceVPN;
+
+
+
     @Bean
     public ConnectionFactory connectionFactory(){
 
         SolConnectionFactory connectionFactory = new SolConnectionFactoryImpl();
-        connectionFactory.setHost("localhost");
-        connectionFactory.setUsername("barath");
-        connectionFactory.setPassword("barath");
-        connectionFactory.setVPN("default");
+        connectionFactory.setHost(solaceHost);
+        connectionFactory.setUsername(solaceUserName);
+        connectionFactory.setPassword(solacePassword);
+        connectionFactory.setVPN(solaceVPN);
 
         return connectionFactory;
     }
