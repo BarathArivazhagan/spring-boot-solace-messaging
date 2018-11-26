@@ -25,7 +25,7 @@ public class SolaceConfiguration {
     private String solacePassword;
 
 
-    @Value("${solace.host:default}")
+    @Value("${solace.vpn:default}")
     private String solaceVPN;
 
 
