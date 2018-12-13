@@ -10,11 +10,15 @@ $ docker run -d -p 8080:8080 -p 55555:55555 --shm-size=2g --env username_admin_g
 
 * Access Solace GUI http://localhost:8080
 
-* Solace P2P( Peer to Peer) 
+# Solace P2P( Point to Point) 
+
+Point to Point messaging using queue destination type.
 
 ![solace p2p](images/solace_p2p.png)
 
 
-* Solace PubSub( Publish Subscribe) 
+# Solace PubSub( Publish Subscribe) 
+
+PubSub messaging using topic destination type
 
 ![solace topic](images/solace_topic.png)
