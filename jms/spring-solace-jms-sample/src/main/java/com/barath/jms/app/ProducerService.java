@@ -5,12 +5,17 @@ import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.MessageConsumer;
 import javax.jms.Session;
+import javax.jms.Topic;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
+
+import com.solacesystems.jcsmp.JCSMPDestinationSession;
+import com.solacesystems.jcsmp.JCSMPSession;
 
 @Service
 public class ProducerService {
@@ -27,19 +32,19 @@ public class ProducerService {
 
     @PostConstruct
     public void init(){
-
+    		
         IntStream.range(0,10)
                 .forEachOrdered( number -> {
 
                     /** classic sample to use message creator api to send messages **/
-                    this.jmsTemplate.send("queue-1", new MessageCreator() {
+                    this.jmsTemplate.send(MessageConstants.QUEUE1, new MessageCreator() {
                         @Override
                         public Message createMessage(Session session) throws JMSException {
                             return session.createTextMessage("hello"+number);
                         }
                     });
 
-                    this.jmsTemplate.send("queue-2", new MessageCreator() {
+                    this.jmsTemplate.send(MessageConstants.QUEUE2, new MessageCreator() {
                         @Override
                         public Message createMessage(Session session) throws JMSException {
                             return session.createTextMessage("hello"+number);
@@ -48,11 +53,16 @@ public class ProducerService {
 
 
                     
-                    this.jmsTemplate.send("queue-1", session -> session.createTextMessage("hello"+number));
-                    this.jmsTemplate.send("queue-2", session -> session.createTextMessage("hello"+number));
+                    this.jmsTemplate.send(MessageConstants.QUEUE1, session -> session.createTextMessage("hello"+number));
+                    this.jmsTemplate.send(MessageConstants.QUEUE2, session -> session.createTextMessage("hello"+number)); 
                     
                  
-                    this.topicJmsTemplate.send("demo-topic",  session -> session.createTextMessage("hello"+number));
+                    this.topicJmsTemplate.send(MessageConstants.DEMOTOPIC,  session -> {
+                    		
+                    	Topic topic = session.createTopic(MessageConstants.DEMOTOPIC);
+                    	session.createDurableSubscriber(topic, MessageConstants.DEMOTOPIC);                    
+                    	return session.createTextMessage("hello"+number);
+                    });
                 });
     }
 }

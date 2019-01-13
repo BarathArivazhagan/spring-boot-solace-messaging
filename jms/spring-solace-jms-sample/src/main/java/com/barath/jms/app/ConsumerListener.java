@@ -14,27 +14,22 @@ public class ConsumerListener {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @JmsListener(containerFactory="queueListenerContainerFactory", destination = "queue-1")
+    @JmsListener(containerFactory="queueListenerContainerFactory", destination = MessageConstants.QUEUE1)
     public void listenToQueue1(Message message){
-    	logger.info("listener called {}",message);
+    	logger.info("listener queue-1 called {}",message);
 
     }
 
-    @JmsListener(containerFactory="queueListenerContainerFactory",destination = "queue-2")
+    @JmsListener(containerFactory="queueListenerContainerFactory",destination = MessageConstants.QUEUE2)
     public void listenToQueue2(Message message){
-    	logger.info("listener called {} ",message);
+    	logger.info("listener queue 2 called {} ",message);
 
     }
+  
     
-    @JmsListener(containerFactory="queueListenerContainerFactory",destination = "queue-1")
-    public void listenToQueue3(Message message){
-    	logger.info("listener called 3 ====> {}",message);
-
-    }
-    
-    @JmsListener(containerFactory="topicListenerContainerFactory" , destination = "demo-topic")
+    @JmsListener(containerFactory="topicListenerContainerFactory" , destination = MessageConstants.DEMOTOPIC, subscription= MessageConstants.DEMOTOPIC)
     public void listenToDemoTopic(Message message){
-        System.out.println("topic subscribed ====> "+message);
+    	logger.info("message from topic ====> {}",message);
 
     }
 }
