@@ -1,4 +1,4 @@
-# solace-messaging
+# spring-solace-messaging
 
 This repository contains spring boot samples integrated with solace message broker.
 
