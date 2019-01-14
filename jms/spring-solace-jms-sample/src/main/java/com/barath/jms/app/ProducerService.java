@@ -58,9 +58,6 @@ public class ProducerService {
                     
                  
                     this.topicJmsTemplate.send(MessageConstants.DEMOTOPIC,  session -> {
-                    		
-                    	Topic topic = session.createTopic(MessageConstants.DEMOTOPIC);
-                    	session.createDurableSubscriber(topic, MessageConstants.DEMOTOPIC);                    
                     	return session.createTextMessage("hello"+number);
                     });
                 });

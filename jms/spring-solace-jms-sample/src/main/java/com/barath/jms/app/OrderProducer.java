@@ -15,29 +15,30 @@ import org.springframework.util.Assert;
 
 import com.barath.jms.app.model.Order;
 
-//@Service
+@Service
 public class OrderProducer {
 	
 	  private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	    private final JmsTemplate orderTemplate;
+	    private final JmsTemplate orderJmsTemplate;
 
 
-	    public OrderProducer(@Qualifier("orderJmsTemplate")JmsTemplate orderTemplate) {
-	        this.orderTemplate = orderTemplate;
+	    public OrderProducer(@Qualifier("orderJmsTemplate")JmsTemplate orderJmsTemplate) {
+	        this.orderJmsTemplate = orderJmsTemplate;
 	    }
 
 	    public void publishOrder(Order order){
 	        Assert.notNull(order,"order cannot be null");
 	        logger.info("order to be sent {}",Objects.toString(order));
-	        this.orderTemplate.convertAndSend("order-topic",order);
+	        this.orderJmsTemplate.convertAndSend(MessageConstants.ORDERTOPIC,order);
 	    }
 	    
-	    //@PostConstruct
+	    @PostConstruct
 	    public void init() {
 	    	
 	    	IntStream.range(0, 10)
 	    		.forEachOrdered(  i ->{
+
 	    			this.publishOrder(new Order(Long.valueOf(i), "TV", i*2, 1000*1));
 	    		});
 	    }

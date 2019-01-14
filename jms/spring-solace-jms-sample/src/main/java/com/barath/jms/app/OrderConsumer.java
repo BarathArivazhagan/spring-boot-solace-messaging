@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 
 import com.barath.jms.app.model.Order;
 
-//@Service
+@Service
 public class OrderConsumer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @JmsListener(containerFactory="orderListenerContainerFactory", destination = "order-topic")
+    @JmsListener(containerFactory="orderTopicListenerContainerFactory", destination = MessageConstants.ORDERTOPIC, subscription =  MessageConstants.ORDERTOPIC)
     public void consumerOrder(Order order){
-    	logger.info("order recevied {}",Objects.toString(order));
+    	logger.info("order received {}",Objects.toString(order));
 
     }
 

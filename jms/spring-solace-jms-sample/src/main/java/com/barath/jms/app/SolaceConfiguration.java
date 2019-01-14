@@ -11,6 +11,8 @@ import org.springframework.jms.core.JmsTemplate;
 
 import com.solacesystems.jms.SolConnectionFactory;
 import com.solacesystems.jms.SolConnectionFactoryImpl;
+import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
+import org.springframework.jms.support.converter.MessageConverter;
 
 @Configuration
 public class SolaceConfiguration {
@@ -98,6 +100,47 @@ public class SolaceConfiguration {
         factory.setPubSubDomain(true);
         return factory;
     }
-    
+
+    /**
+     * This method creates a jmstemplate by passing connection factory for sending orders.
+     * By setting  pubsub domain as true (for topics) and it is used for topic destination type messaging.
+     *
+     * @param connectionFactory
+     * @return an instance of jmsTemplate {@link JmsTemplate}
+     */
+    @Bean
+    public JmsTemplate orderJmsTemplate(ConnectionFactory connectionFactory) {
+
+        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
+        jmsTemplate.setPubSubDomain(true);
+        jmsTemplate.setMessageConverter(jackson2MessageConverter());
+        jmsTemplate.setSessionAcknowledgeMode(Session.AUTO_ACKNOWLEDGE);
+        return jmsTemplate;
+
+    }
+
+    /**
+     * This method returns a listener container factory to listen to order topics
+     *
+     * @return DefaultJmsListenerContainerFactory
+     */
+    @Bean
+    public DefaultJmsListenerContainerFactory orderTopicListenerContainerFactory() {
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory());
+        factory.setSubscriptionDurable(true);
+        factory.setMessageConverter(jackson2MessageConverter());
+        factory.setPubSubDomain(true);
+        return factory;
+    }
+
+
+    @Bean
+    public MessageConverter jackson2MessageConverter(){
+
+        MappingJackson2MessageConverter jackson2MessageConverter = new MappingJackson2MessageConverter();
+        jackson2MessageConverter.setTypeIdPropertyName("orderId");
+        return jackson2MessageConverter;
+    }
    
 }
