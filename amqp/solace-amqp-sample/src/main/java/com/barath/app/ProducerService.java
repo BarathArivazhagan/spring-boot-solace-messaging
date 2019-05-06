@@ -28,7 +28,7 @@ public class ProducerService {
     @PostConstruct
     public void init(){
 
-        IntStream.range(0,10)
+        IntStream.range(0,1)
                 .forEachOrdered( number -> {
 
                     /** classic sample to use message creator api to send messages **/
@@ -52,7 +52,7 @@ public class ProducerService {
                     this.jmsTemplate.send("queue-2", session -> session.createTextMessage("hello"+number));
                     
                  
-                    this.topicJmsTemplate.send("demo-topic",  session -> session.createTextMessage("hello"+number));
+                    //this.topicJmsTemplate.send("demo-topic",  session -> session.createTextMessage("hello"+number));
                 });
     }
 }

@@ -28,8 +28,9 @@ public class SolaceConfiguration {
 
     @Bean
     public ConnectionFactory connectionFactory(){
-    	JmsConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUserName,solacePassword,solaceHost);
-        return connectionFactory;
+
+    	return new JmsConnectionFactory(solaceUserName,solacePassword);
+
     }
     
     /**
